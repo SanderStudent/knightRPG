@@ -7,13 +7,10 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-type vector struct {
-	x, y float64
-}
-
 type component interface {
 	onUpdate() error
 	onDraw(elem *element, renderer *sdl.Renderer) error
+	onCollision(other *element) error
 }
 
 type element struct {
@@ -21,8 +18,11 @@ type element struct {
 	rotation   float64
 	active     bool
 	size       float64
+	collisions []circle
 	components []component
 }
+
+var elements []*element
 
 func (elem *element) draw(renderer *sdl.Renderer) error {
 	for _, comp := range elem.components {
@@ -41,7 +41,16 @@ func (elem *element) update() error {
 			return err
 		}
 	}
+	return nil
+}
 
+func (elem *element) onCollision(other *element) error {
+	for _, comp := range elem.components {
+		err := comp.onCollision(other)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -67,4 +76,13 @@ func (elem *element) getComponent(withType component) component {
 	panic(fmt.Sprintf("no component with type %v", reflect.TypeOf(withType)))
 }
 
-var elements []*element
+func (elem *element) collision(other *element) error {
+	for _, comp := range elem.components {
+		err := comp.onCollision(other)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

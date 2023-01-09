@@ -18,18 +18,11 @@ func newEnemy(renderer *sdl.Renderer, position vector) *element {
 
 	sr := newSpriteRenderer(enemy, renderer, "sprites/enemy.bmp")
 	enemy.addComponent(sr)
+	col := circle{
+		center: enemy.position,
+		radius: 30,
+	}
+	enemy.collisions = append(enemy.collisions, col)
 
 	return enemy
 }
-
-//func (e *enemy) draw(renderer *sdl.Renderer) {
-//	x := e.x - enemySize/2.0
-//	y := e.y - enemySize/2.0
-//
-//	if err := renderer.Copy(e.tex,
-//		&sdl.Rect{W: 580, H: 580},
-//		&sdl.Rect{X: int32(x), Y: int32(y), W: enemySize, H: enemySize},
-//	); err != nil {
-//		panic("render copy failed")
-//	}
-//}

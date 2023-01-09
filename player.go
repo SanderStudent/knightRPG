@@ -5,9 +5,11 @@ import (
 )
 
 const (
-	playerSpeed = 1
+	playerSpeed = 5
 	playerSize  = 200
 )
+
+var delta = 0.5
 
 func newPlayer(renderer *sdl.Renderer, position vector) *element {
 	player := &element{
