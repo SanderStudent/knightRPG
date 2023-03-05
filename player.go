@@ -18,12 +18,14 @@ func newPlayer(renderer *sdl.Renderer, position vector) *element {
 		active:   true,
 		size:     playerSize,
 	}
-
 	sr := newSpriteRenderer(player, renderer, "sprites/player.bmp")
 	player.addComponent(sr)
-
 	mover := newKeyboardMover(player, playerSpeed)
 	player.addComponent(mover)
-
+	col := circle{
+		center: player.position,
+		radius: 40,
+	}
+	player.collisions = append(player.collisions, col)
 	return player
 }
