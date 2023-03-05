@@ -56,7 +56,6 @@ func main() {
 				return
 			}
 		}
-		//add comment
 		err := renderer.SetDrawColor(0, 0, 100, 255)
 		if err != nil {
 			return

@@ -7,8 +7,7 @@ import (
 type keyboardMover struct {
 	container *element
 	speed     float64
-
-	sr *spriteRenderer
+	sr        *spriteRenderer
 }
 
 func newKeyboardMover(container *element, speed float64) *keyboardMover {
@@ -20,7 +19,6 @@ func newKeyboardMover(container *element, speed float64) *keyboardMover {
 }
 
 func (mover *keyboardMover) onDraw(elem *element, renderer *sdl.Renderer) error {
-
 	return nil
 }
 
@@ -46,7 +44,6 @@ func (mover *keyboardMover) onUpdate() error {
 			cont.position.y += mover.speed * delta
 		}
 	}
-
 	return nil
 }
 

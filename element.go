@@ -72,7 +72,6 @@ func (elem *element) getComponent(withType component) component {
 			return comp
 		}
 	}
-
 	panic(fmt.Sprintf("no component with type %v", reflect.TypeOf(withType)))
 }
 
@@ -83,6 +82,5 @@ func (elem *element) collision(other *element) error {
 			return err
 		}
 	}
-
 	return nil
 }

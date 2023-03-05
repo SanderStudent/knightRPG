@@ -7,15 +7,14 @@ import (
 )
 
 type spriteRenderer struct {
-	container *element
-	tex       *sdl.Texture
-
+	container     *element
+	tex           *sdl.Texture
 	width, height int
 }
 
 func (sr *spriteRenderer) onCollision(other *element) error {
-	//TODO implement me
-	panic("implement me")
+	fmt.Println("collision")
+	return nil
 }
 
 func newSpriteRenderer(container *element, renderer *sdl.Renderer, filename string) *spriteRenderer {
@@ -40,6 +39,7 @@ func newSpriteRenderer(container *element, renderer *sdl.Renderer, filename stri
 }
 
 func (sr *spriteRenderer) start() {
+	return
 }
 
 func (sr *spriteRenderer) onUpdate() error {
