@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 const (
-	screenWidth          = 1200
-	screenHeight         = 800
-	targetTicksPerSecond = 60
+	screenWidth  = 12  //in blocks
+	screenHeight = 8   //in blocks
+	blockSize    = 100 //in pixels
 )
 
 type vector struct {
@@ -21,7 +20,7 @@ func main() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		fmt.Println(err)
 	}
-	window, err := sdl.CreateWindow("KnightRPG", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, screenWidth, screenHeight, sdl.WINDOW_OPENGL)
+	window, err := sdl.CreateWindow("KnightRPG", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, screenWidth*blockSize, screenHeight*blockSize, sdl.WINDOW_OPENGL)
 	if err != nil {
 		fmt.Println("Initializing window", err)
 		return
@@ -45,44 +44,42 @@ func main() {
 		}
 	}(renderer)
 
-	elements = append(elements, newPlayer(renderer, vector{screenWidth * 1.0 / 3.0, screenHeight * 1.0 / 3.0}))
-	elements = append(elements, newEnemy(renderer, vector{screenWidth * 2.0 / 3.0, screenHeight * 2.0 / 3.0}))
+	p := newPlayer(renderer, vector{blockSize * 0, blockSize * 0})
+	e := newEnemy(renderer, vector{blockSize * (screenWidth - 2), blockSize * (screenHeight - 2)})
 
 	for {
-		frameStartTime := time.Now()
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
 			case *sdl.QuitEvent:
 				return
 			}
 		}
-		err := renderer.SetDrawColor(0, 0, 100, 255)
-		if err != nil {
+		if err := renderer.SetDrawColor(0, 0, 100, 255); err != nil {
 			return
 		}
-		err = renderer.Clear()
-		if err != nil {
+		if err = renderer.Clear(); err != nil {
 			return
 		}
-		for _, elem := range elements {
-			if elem.active {
-				err = elem.update()
-				if err != nil {
-					fmt.Println("updating element:", err)
-					return
-				}
-				err = elem.draw(renderer)
-				if err != nil {
-					fmt.Println("drawing element:", elem)
-					return
-				}
-			}
+		p.update()
+		if err = p.draw(renderer); err != nil {
+			fmt.Println("drawing player:", err)
+			return
 		}
-		if err := checkCollisions(); err != nil {
-			fmt.Println("checking collisions:", err)
+		if err = e.update(); err != nil {
+			fmt.Println("updating enemy:", err)
+			return
+		}
+		if err = e.draw(renderer); err != nil {
+			fmt.Println("drawing enemy:", err)
+			return
+		}
+		if err := window.UpdateSurface(); err != nil {
 			return
 		}
 		renderer.Present()
-		delta = time.Since(frameStartTime).Seconds() * targetTicksPerSecond
+		if p.justMoved {
+			sdl.Delay(300)
+			p.justMoved = false
+		}
 	}
 }
