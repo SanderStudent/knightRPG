@@ -73,9 +73,10 @@ func main() {
 			fmt.Println("drawing enemy:", err)
 			return
 		}
-		if err := window.UpdateSurface(); err != nil {
-			return
-		}
+		//if err = window.UpdateSurface(); err != nil {
+		//	fmt.Println("Updating surface:", err)
+		//	return
+		//}
 		renderer.Present()
 		if p.justMoved {
 			sdl.Delay(300)

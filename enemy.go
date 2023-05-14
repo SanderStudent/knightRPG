@@ -69,12 +69,20 @@ func (e *enemy) draw(renderer *sdl.Renderer) error {
 		sdl.FLIP_NONE); err != nil {
 		return err
 	}
-	font, err := ttf.OpenFont("Sans.ttf", 24)
+	err := drawText(renderer, x, y, e)
+	return err
+}
+
+func drawText(renderer *sdl.Renderer, x, y float64, e *enemy) error {
+	if err := ttf.Init(); err != nil {
+		return err
+	}
+	font, err := ttf.OpenFont("fonts/OpenSans-Regular.ttf", 12)
 	if err != nil {
 		return err
 	}
 	defer font.Close()
-	surfaceMessage, err := font.RenderUTF8Solid("hello world", sdl.Color{R: 100, G: 100, B: 100, A: 255})
+	surfaceMessage, err := font.RenderUTF8Solid("HP: ", sdl.Color{R: 255, G: 0, B: 0, A: 255})
 	if err != nil {
 		return err
 	}
@@ -89,11 +97,10 @@ func (e *enemy) draw(renderer *sdl.Renderer) error {
 	if err = renderer.CopyEx(
 		messageTexture,
 		nil,
-		&sdl.Rect{X: int32(x), Y: int32(y), W: int32(e.size), H: int32(e.size)}, 0,
+		&sdl.Rect{X: int32(x), Y: int32(y - 40), W: int32(e.size), H: int32(50)}, 0,
 		&sdl.Point{X: int32(e.spriteRenderer.width) / 2, Y: int32(e.spriteRenderer.height) / 2},
 		sdl.FLIP_NONE); err != nil {
 		return err
 	}
-
 	return nil
 }
