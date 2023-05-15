@@ -8,15 +8,12 @@ import (
 
 const (
 	playerSize = 100
-	playerHP   = 10
+	playerHP   = 20
 )
 
 type player struct {
-	position       vector
-	size           float64
-	spriteRenderer spriteRenderer
-	justMoved      bool
-	healthPoints   int
+	character
+	justMoved bool
 }
 
 type spriteRenderer struct {
@@ -27,9 +24,12 @@ type spriteRenderer struct {
 
 func newPlayer(renderer *sdl.Renderer, position vector) player {
 	p := player{
-		position:     position,
-		size:         playerSize,
-		healthPoints: playerHP,
+		character: character{
+			position:  position,
+			size:      playerSize,
+			currentHP: playerHP,
+			maxHP:     playerHP,
+		},
 	}
 	err := p.newSpriteRenderer(renderer, "sprites/player.bmp")
 	if err != nil {
@@ -96,5 +96,6 @@ func (p *player) draw(renderer *sdl.Renderer) error {
 		sdl.FLIP_NONE); err != nil {
 		return err
 	}
-	return nil
+	err := drawText(renderer, x, y, p.character)
+	return err
 }

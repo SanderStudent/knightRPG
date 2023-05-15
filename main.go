@@ -44,7 +44,7 @@ func main() {
 		}
 	}(renderer)
 
-	p := newPlayer(renderer, vector{blockSize * 0, blockSize * 0})
+	p := newPlayer(renderer, vector{blockSize * 1, blockSize * 1})
 	e := newEnemy(renderer, vector{blockSize * (screenWidth - 2), blockSize * (screenHeight - 2)})
 
 	for {
