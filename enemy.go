@@ -52,9 +52,7 @@ func (e *enemy) newSpriteRenderer(renderer *sdl.Renderer, filename string) error
 	return nil
 }
 
-func (e *enemy) update() error {
-
-	return nil
+func (e *enemy) update() {
 }
 
 func (e *enemy) draw(renderer *sdl.Renderer) error {
@@ -68,6 +66,6 @@ func (e *enemy) draw(renderer *sdl.Renderer) error {
 		sdl.FLIP_NONE); err != nil {
 		return err
 	}
-	err := drawText(renderer, x, y, e.character)
+	err := showHP(renderer, x, y, e.character)
 	return err
 }

@@ -61,22 +61,22 @@ func main() {
 			return
 		}
 		p.update()
+		e.update()
+		checkCollision(&p, &e)
+		if p.fightMode {
+			if err := printText("FIGHT!", screenWidth/2*blockSize, screenHeight/2*blockSize, renderer); err != nil {
+				fmt.Println("printing text", err)
+				return
+			}
+		}
 		if err = p.draw(renderer); err != nil {
 			fmt.Println("drawing player:", err)
-			return
-		}
-		if err = e.update(); err != nil {
-			fmt.Println("updating enemy:", err)
 			return
 		}
 		if err = e.draw(renderer); err != nil {
 			fmt.Println("drawing enemy:", err)
 			return
 		}
-		//if err = window.UpdateSurface(); err != nil {
-		//	fmt.Println("Updating surface:", err)
-		//	return
-		//}
 		renderer.Present()
 		if p.justMoved {
 			sdl.Delay(300)

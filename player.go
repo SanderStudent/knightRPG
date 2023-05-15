@@ -61,6 +61,10 @@ func (p *player) newSpriteRenderer(renderer *sdl.Renderer, filename string) erro
 
 func (p *player) update() {
 	keys := sdl.GetKeyboardState()
+	if p.fightMode && keys[sdl.SCANCODE_SPACE] == 1 {
+		attack()
+		return
+	}
 	if keys[sdl.SCANCODE_LEFT] == 1 {
 		if p.position.x > 0 {
 			p.position.x -= blockSize
@@ -84,6 +88,10 @@ func (p *player) update() {
 	}
 }
 
+func attack() {
+
+}
+
 func (p *player) draw(renderer *sdl.Renderer) error {
 	x := p.position.x
 	y := p.position.y
@@ -96,6 +104,6 @@ func (p *player) draw(renderer *sdl.Renderer) error {
 		sdl.FLIP_NONE); err != nil {
 		return err
 	}
-	err := drawText(renderer, x, y, p.character)
+	err := showHP(renderer, x, y, p.character)
 	return err
 }
