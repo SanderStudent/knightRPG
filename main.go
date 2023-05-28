@@ -64,7 +64,7 @@ func main() {
 		e.update()
 		checkCollision(&p, &e)
 		if p.fightMode {
-			if err := printText("FIGHT!", screenWidth/2*blockSize, screenHeight/2*blockSize, renderer); err != nil {
+			if err = printText("FIGHT!", screenWidth/2*blockSize, screenHeight/2*blockSize, renderer); err != nil {
 				fmt.Println("printing text", err)
 				return
 			}

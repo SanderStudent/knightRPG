@@ -61,8 +61,10 @@ func (p *player) newSpriteRenderer(renderer *sdl.Renderer, filename string) erro
 
 func (p *player) update() {
 	keys := sdl.GetKeyboardState()
-	if p.fightMode && keys[sdl.SCANCODE_SPACE] == 1 {
-		attack()
+	if p.fightMode {
+		if keys[sdl.SCANCODE_SPACE] == 1 {
+			attack()
+		}
 		return
 	}
 	if keys[sdl.SCANCODE_LEFT] == 1 {

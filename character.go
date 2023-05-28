@@ -83,7 +83,7 @@ func printText(s string, x, y float64, renderer *sdl.Renderer) error {
 }
 
 func checkCollision(p *player, e *enemy) {
-	if math.Abs(p.position.x-e.position.x) <= blockSize && math.Abs(p.position.y-e.position.y) <= blockSize {
+	if math.Abs(p.position.x-e.position.x)+math.Abs(p.position.y-e.position.y) <= blockSize {
 		p.fightMode = true
 		e.fightMode = true
 	}
