@@ -12,6 +12,8 @@ type character struct {
 	position       vector
 	size           float64
 	spriteRenderer spriteRenderer
+	attack         int
+	defence        int
 	currentHP      int
 	maxHP          int
 	fightMode      bool

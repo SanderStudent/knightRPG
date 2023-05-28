@@ -2,22 +2,26 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 const (
-	enemySize = 100
-	enemyHP   = 10
+	enemySize    = 100
+	enemyHP      = 10
+	enemyAttack  = 5
+	enemyDefence = 5
 )
 
 type enemy struct {
 	character
+	justFought bool
 }
 
 func newEnemy(renderer *sdl.Renderer, position vector) enemy {
 	e := enemy{
-		character{
+		character: character{
 			position:  position,
 			size:      enemySize,
 			currentHP: enemyHP,
@@ -53,6 +57,16 @@ func (e *enemy) newSpriteRenderer(renderer *sdl.Renderer, filename string) error
 }
 
 func (e *enemy) update() {
+	if e.fightMode {
+		e.defendFromPlayer()
+		return
+	}
+}
+
+func (e *enemy) defendFromPlayer() {
+	damageRoll := int(rand.Float64() * playerAttack * playerAttack / enemyDefence)
+	e.currentHP -= damageRoll
+	e.justFought = true
 }
 
 func (e *enemy) draw(renderer *sdl.Renderer) error {

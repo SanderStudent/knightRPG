@@ -2,18 +2,22 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 const (
-	playerSize = 100
-	playerHP   = 20
+	playerSize    = 100
+	playerHP      = 20
+	playerAttack  = 5
+	playerDefence = 5
 )
 
 type player struct {
 	character
-	justMoved bool
+	justMoved  bool
+	justFought bool
 }
 
 type spriteRenderer struct {
@@ -27,6 +31,8 @@ func newPlayer(renderer *sdl.Renderer, position vector) player {
 		character: character{
 			position:  position,
 			size:      playerSize,
+			attack:    playerAttack,
+			defence:   playerDefence,
 			currentHP: playerHP,
 			maxHP:     playerHP,
 		},
@@ -60,13 +66,11 @@ func (p *player) newSpriteRenderer(renderer *sdl.Renderer, filename string) erro
 }
 
 func (p *player) update() {
-	keys := sdl.GetKeyboardState()
 	if p.fightMode {
-		if keys[sdl.SCANCODE_SPACE] == 1 {
-			attack()
-		}
+		p.defendFromEnemy()
 		return
 	}
+	keys := sdl.GetKeyboardState()
 	if keys[sdl.SCANCODE_LEFT] == 1 {
 		if p.position.x > 0 {
 			p.position.x -= blockSize
@@ -90,8 +94,10 @@ func (p *player) update() {
 	}
 }
 
-func attack() {
-
+func (p *player) defendFromEnemy() {
+	damageRoll := int(rand.Float64() * enemyAttack * enemyAttack / playerDefence)
+	p.currentHP -= damageRoll
+	p.justFought = true
 }
 
 func (p *player) draw(renderer *sdl.Renderer) error {

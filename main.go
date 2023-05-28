@@ -69,6 +69,12 @@ func main() {
 				return
 			}
 		}
+		if p.currentHP <= 0 {
+			if err = printText("You died!", screenWidth/2*blockSize, screenHeight/2*blockSize, renderer); err != nil {
+				fmt.Println("printing text", err)
+				return
+			}
+		}
 		if err = p.draw(renderer); err != nil {
 			fmt.Println("drawing player:", err)
 			return
@@ -81,6 +87,11 @@ func main() {
 		if p.justMoved {
 			sdl.Delay(300)
 			p.justMoved = false
+		}
+		if p.justFought {
+			sdl.Delay(300)
+			p.justFought = false
+			e.justFought = false
 		}
 	}
 }
