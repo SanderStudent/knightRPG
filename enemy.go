@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -26,6 +27,8 @@ func newEnemy(renderer *sdl.Renderer, position vector) enemy {
 			size:      enemySize,
 			currentHP: enemyHP,
 			maxHP:     enemyHP,
+			attack:    enemyAttack,
+			defence:   enemyDefence,
 		},
 	}
 	err := e.newSpriteRenderer(renderer, "sprites/enemy.bmp")
@@ -56,17 +59,20 @@ func (e *enemy) newSpriteRenderer(renderer *sdl.Renderer, filename string) error
 	return nil
 }
 
-func (e *enemy) update() {
+func (e *enemy) update(renderer *sdl.Renderer, p player) int {
 	if e.fightMode {
-		e.defendFromPlayer()
-		return
+		damage := e.defendFromPlayer(renderer, p)
+		return damage
 	}
+	return 0
 }
 
-func (e *enemy) defendFromPlayer() {
-	damageRoll := int(rand.Float64() * playerAttack * playerAttack / enemyDefence)
-	e.currentHP -= damageRoll
+func (e *enemy) defendFromPlayer(renderer *sdl.Renderer, p player) int {
+	damageRoll := rand.Intn(p.attack*p.attack/e.defence + 1)
 	e.justFought = true
+	e.currentHP -= damageRoll
+	printText(strconv.Itoa(damageRoll), e.position.x, e.position.y, renderer)
+	return damageRoll
 }
 
 func (e *enemy) draw(renderer *sdl.Renderer) error {

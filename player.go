@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -65,10 +66,10 @@ func (p *player) newSpriteRenderer(renderer *sdl.Renderer, filename string) erro
 	return nil
 }
 
-func (p *player) update() {
+func (p *player) update(renderer *sdl.Renderer, e enemy) int {
 	if p.fightMode {
-		p.defendFromEnemy()
-		return
+		damage := p.defendFromEnemy(renderer, e)
+		return damage
 	}
 	keys := sdl.GetKeyboardState()
 	if keys[sdl.SCANCODE_LEFT] == 1 {
@@ -92,12 +93,15 @@ func (p *player) update() {
 			p.justMoved = true
 		}
 	}
+	return 0
 }
 
-func (p *player) defendFromEnemy() {
-	damageRoll := int(rand.Float64() * enemyAttack * enemyAttack / playerDefence)
-	p.currentHP -= damageRoll
+func (p *player) defendFromEnemy(renderer *sdl.Renderer, e enemy) int {
+	damageRoll := rand.Intn(e.attack*e.attack/p.defence + 1)
 	p.justFought = true
+	p.currentHP -= damageRoll
+	printText(strconv.Itoa(damageRoll), p.position.x, p.position.y, renderer)
+	return damageRoll
 }
 
 func (p *player) draw(renderer *sdl.Renderer) error {

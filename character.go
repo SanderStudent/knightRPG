@@ -52,40 +52,39 @@ func showHP(renderer *sdl.Renderer, x, y float64, c character) error {
 	return nil
 }
 
-func printText(s string, x, y float64, renderer *sdl.Renderer) error {
+func printText(s string, x, y float64, renderer *sdl.Renderer) {
 	if err := ttf.Init(); err != nil {
-		return err
+		panic("problem initializing ttf")
 	}
 	font, err := ttf.OpenFont("fonts/OpenSans-Regular.ttf", 12)
 	if err != nil {
-		return err
+		panic("problem opening font")
 	}
 	defer font.Close()
 	surfaceMessage, err := font.RenderUTF8Solid(s, sdl.Color{R: 255, G: 0, B: 0, A: 255})
 	if err != nil {
-		return err
+		panic("problem rendering message")
 	}
 	defer surfaceMessage.Free()
 	if err = surfaceMessage.Blit(nil, surfaceMessage, &sdl.Rect{X: 400, Y: 300, W: 0, H: 0}); err != nil {
-		return err
+		panic("problem during surface copy")
 	}
 	messageTexture, err := renderer.CreateTextureFromSurface(surfaceMessage)
 	if err != nil {
-		return err
+		panic("problem creating texture")
 	}
 	if err = renderer.CopyEx(
 		messageTexture,
 		nil,
-		&sdl.Rect{X: int32(x), Y: int32(y), W: int32(100), H: int32(100)}, 0,
+		&sdl.Rect{X: int32(x), Y: int32(y), W: int32(100), H: int32(50)}, 0,
 		&sdl.Point{X: int32(100), Y: int32(100)},
 		sdl.FLIP_NONE); err != nil {
-		return err
+		panic("problem copying texture to rendering target")
 	}
-	return nil
 }
 
 func checkCollision(p *player, e *enemy) {
-	if math.Abs(p.position.x-e.position.x)+math.Abs(p.position.y-e.position.y) <= blockSize {
+	if math.Abs(p.position.x-e.position.x) <= blockSize && p.position.y-e.position.y == 0 {
 		p.fightMode = true
 		e.fightMode = true
 	}

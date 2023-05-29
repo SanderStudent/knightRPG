@@ -54,26 +54,27 @@ func main() {
 				return
 			}
 		}
-		if err := renderer.SetDrawColor(0, 0, 100, 255); err != nil {
+		if err = renderer.SetDrawColor(0, 0, 100, 255); err != nil {
 			return
 		}
 		if err = renderer.Clear(); err != nil {
 			return
 		}
-		p.update()
-		e.update()
+		p.update(renderer, e)
+		e.update(renderer, p)
 		checkCollision(&p, &e)
 		if p.fightMode {
-			if err = printText("FIGHT!", screenWidth/2*blockSize, screenHeight/2*blockSize, renderer); err != nil {
-				fmt.Println("printing text", err)
-				return
-			}
+			printText("FIGHT!", p.position.x, p.position.y-blockSize, renderer)
 		}
 		if p.currentHP <= 0 {
-			if err = printText("You died!", screenWidth/2*blockSize, screenHeight/2*blockSize, renderer); err != nil {
-				fmt.Println("printing text", err)
-				return
-			}
+			p.fightMode = false
+			e.fightMode = false
+			printText("You died!", p.position.x, p.position.y-blockSize, renderer)
+		}
+		if e.currentHP <= 0 {
+			p.fightMode = false
+			e.fightMode = false
+			printText("Enemy died!", e.position.x, e.position.y-blockSize, renderer)
 		}
 		if err = p.draw(renderer); err != nil {
 			fmt.Println("drawing player:", err)
@@ -89,7 +90,7 @@ func main() {
 			p.justMoved = false
 		}
 		if p.justFought {
-			sdl.Delay(300)
+			sdl.Delay(1500)
 			p.justFought = false
 			e.justFought = false
 		}
